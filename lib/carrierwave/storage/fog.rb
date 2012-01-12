@@ -231,12 +231,12 @@ module CarrierWave
         def store(new_file)
           fog_file = new_file.to_file
           @content_type ||= new_file.content_type
-          @file = directory.files.create({
+          @file = directory.files.new({
             :body         => fog_file ? fog_file : new_file.read,
             :content_type => @content_type,
             :key          => path,
             :public       => @uploader.fog_public
-          }.merge(@uploader.fog_attributes))
+          }.merge(@uploader.fog_attributes)).save('x-amz-server-side-encryption' => 'AES256')
           true
         end
 
